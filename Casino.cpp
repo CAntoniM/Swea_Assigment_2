@@ -106,6 +106,10 @@ inline bool valid_bet(fint32_t bet) {
     return true;
 }
 
+/**
+ * @breif Prompts the user for a bet and validates the outupt
+ * @return bet
+*/
 inline fint32_t get_bet() {
     fint32_t bet = -1;
     
@@ -117,6 +121,13 @@ inline fint32_t get_bet() {
     return bet;
 }
 
+/**
+ * @breif checks if the dice are within a valid range for the number of dice
+ *        rolled and number of sides on those dice.
+ * @param guess
+ * @return true if guess meets the user validation
+ * @return false if the guess does not meet user validation
+*/
 inline bool valid_guess(int32_t guess) {
     const int32_t lower_bound = number_of_dice;
     const int32_t upper_bound = number_of_sides * number_of_dice;
