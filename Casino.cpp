@@ -13,14 +13,17 @@ typedef float fint32_t;
 typedef double fint64_t;
 
 //inital value given to users to play with
-const fint32_t inital_balance = 500;
+const fint32_t INITAL_BALANCE = 500;
 //the scale factor that we are rewarding the users with if they are correct.
-const fint32_t reward_scaler = 2;
+const fint32_t REWARD_SCALER = 2;
 //the number of dice we are using for each game
-static const int number_of_dice = 2;
+static const int NUNBER_OF_DICE = 2;
 //the number of sides we are using for the game
-static const int number_of_sides = 6;
-
+static const int NUMBER_OF_SIDED = 6;
+//Magic number representing odd numbers
+static const int ODD = 1;
+//Magic number reprresenting even numbers
+static const int EVEN = 2;
 enum Games {
 
     GuessTheNumber = 1,
@@ -36,7 +39,7 @@ enum Games {
  */
 inline fint32_t balance(fint32_t change = 0) {
 
-    static fint32_t balance = inital_balance;
+    static fint32_t balance = INITAL_BALANCE;
     balance += change;
     return balance;
 }
@@ -77,7 +80,7 @@ inline std::string prompt( std::string msg) {
     std::cout << "Balance $" << balance() << " | "<< msg << " > ";
     std::cout.flush();
     
-    std::cin >> buffer;
+    std::getline(std::cin,buffer);
 
     std::cout << std::endl;
     
@@ -129,8 +132,8 @@ inline fint32_t get_bet() {
  * @return false if the guess does not meet user validation
 */
 inline bool valid_guess(int32_t guess) {
-    const int32_t lower_bound = number_of_dice;
-    const int32_t upper_bound = number_of_sides * number_of_dice;
+    const int32_t lower_bound = NUNBER_OF_DICE;
+    const int32_t upper_bound = NUMBER_OF_SIDED * NUNBER_OF_DICE;
 
     if (guess < lower_bound || guess > upper_bound ) {
         std::cerr << "ERROR: Gueses must be in the range : " 
@@ -147,7 +150,7 @@ inline bool valid_guess(int32_t guess) {
  * @param sides 
  * @return int32_t 
  */
-inline int32_t roll(int32_t sides = number_of_sides) { 
+inline int32_t roll(int32_t sides = NUMBER_OF_SIDED) { 
     return rand() % sides;
 } 
 
@@ -165,7 +168,7 @@ void guess_the_number() {
 
     do {
         std::cout << "Please enter your guess between " << 
-                    number_of_dice << " and " << number_of_dice * number_of_sides <<
+                    NUNBER_OF_DICE << " and " << NUNBER_OF_DICE * NUMBER_OF_SIDED <<
                     ": \n\n";
         std::cout.flush();
 
@@ -175,10 +178,10 @@ void guess_the_number() {
 
     int32_t number = 0;
 
-    for (int32_t i = 0; i < number_of_dice; i++) number += roll();
+    for (int32_t i = 0; i < NUNBER_OF_DICE; i++) number += roll();
 
     if (number == guess) {
-        bet *= reward_scaler;
+        bet *= REWARD_SCALER;
         balance(bet);
         
         std::cout << "Congratulations: You have guessed correctly\n\n";
@@ -199,7 +202,7 @@ void guess_the_number() {
  * @return int32_t 
  */
 inline int32_t is_odd(int32_t val) {
-    return val & 1;
+    return (val & 1 ) == 0 ? EVEN : ODD ;
 }
 
 /**
@@ -211,7 +214,6 @@ inline int32_t is_odd(int32_t val) {
  */
 void guess_is_odd() {
     
-    
     fint32_t bet = get_bet();
     
     int guess = -1;
@@ -219,16 +221,16 @@ void guess_is_odd() {
 
     do {
         std::cout << "Please select what you think the dice will be:\n" << 
-                        "\t0) even\n" << 
-                        "\t1) odd\n\n";
+                        "\t" << ODD  << ") odd\n" << 
+                        "\t" << EVEN << ") even\n\n";
         std::cout.flush();
 
         std::string user_input = prompt("guess");
         guess = atoi(user_input.c_str());
 
         switch (guess) {
-            case 0:
-            case 1: 
+            case ODD:
+            case EVEN: 
                 valid_guess = true;
                 break;
             default:
@@ -241,7 +243,7 @@ void guess_is_odd() {
 
     bool result = true;
 
-    for (int32_t i = 0; i < number_of_dice; i++) { 
+    for (int32_t i = 0; i < NUNBER_OF_DICE; i++) { 
         if (is_odd(roll()) != guess) {
             result = false;
             break;
@@ -249,7 +251,7 @@ void guess_is_odd() {
     }
 
     if (result) {
-        bet *= reward_scaler;
+        bet *= REWARD_SCALER;
         balance(bet);
         
         std::cout << "Congratulations: You have guessed correctly\n\n";
