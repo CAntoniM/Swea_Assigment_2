@@ -20,12 +20,33 @@ const fint32_t REWARD_SCALER = 2;
 static const int NUNBER_OF_DICE = 2;
 //the number of sides we are using for the game
 static const int NUMBER_OF_SIDED = 6;
-//Magic number representing odd numbers
-static const int ODD = 1;
-//Magic number reprresenting even numbers
-static const int EVEN = 2;
-enum Games {
 
+/** Enum to represent if a value is odd or even */
+enum Oddness {
+	ODD = 1,
+	EVEN = 2
+};
+
+/** Helper function to covert a value to the oposit value. */
+inline std::string toString(Oddness val) {
+    switch (val)
+    {
+    case Oddness::ODD:
+        return "Odd";
+    case Oddness::EVEN:
+        return "Even";
+    default:
+        return "Unknown";
+    }
+};
+
+/** Helper function to get the oposite of the current value. */
+inline  Oddness flip (Oddness val) {
+    return val == Oddness::EVEN ? Oddness::ODD : Oddness::EVEN;
+}
+
+/** Enum to represent the games that can be played */
+enum Games {
     GuessTheNumber = 1,
     GuessIsOdd = 2,
     Exit = 3,
@@ -202,7 +223,7 @@ void guess_the_number() {
  * @return int32_t 
  */
 inline int32_t is_odd(int32_t val) {
-    return (val & 1 ) == 0 ? EVEN : ODD ;
+    return (val & 1 ) == 0 ? Oddness::EVEN : Oddness::ODD ;
 }
 
 /**
@@ -216,21 +237,24 @@ void guess_is_odd() {
     
     fint32_t bet = get_bet();
     
-    int guess = -1;
+    Oddness guess;
     bool valid_guess = 0;
 
     do {
         std::cout << "Please select what you think the dice will be:\n" << 
-                        "\t" << ODD  << ") odd\n" << 
-                        "\t" << EVEN << ") even\n\n";
+                        "\t" << Oddness::ODD  << ") odd\n" << 
+                        "\t" << Oddness::EVEN << ") even\n\n";
         std::cout.flush();
 
         std::string user_input = prompt("guess");
-        guess = atoi(user_input.c_str());
 
-        switch (guess) {
-            case ODD:
-            case EVEN: 
+        switch (atoi(user_input.c_str())) {
+            case Oddness::ODD:
+                guess = Oddness::ODD;
+                valid_guess = true;
+                break;
+            case Oddness::EVEN: 
+                guess = Oddness::EVEN;
                 valid_guess = true;
                 break;
             default:
@@ -258,14 +282,11 @@ void guess_is_odd() {
     }else {
         bet *= -1;
         balance(bet);
-
-        const std::string selection_names[] = {"even","odd"};
-        const int32_t result = (guess == 0) ? 1 : 0;
-
+        
         std::cout << "Sorry: You guessed: " 
-                    << selection_names[guess]
+                    << toString(guess)
                     << " and rolled: " 
-                    << selection_names[result] << "\n\n";
+                    << toString(flip(guess)) << "\n\n";
     }
 
     std::cout.flush();
