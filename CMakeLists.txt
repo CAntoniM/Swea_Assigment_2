@@ -3,4 +3,9 @@ cmake_minimum_required(VERSION 3.20)
 
 Project(Casino VERSION 1 LANGUAGES CXX)
 
-add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
+file(GLOB src "src/*")
+
+add_executable(${PROJECT_NAME} ${src})
+
+target_include_directories(${PROJECT_NAME} PUBLIC inc)
+
