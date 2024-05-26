@@ -1,5 +1,6 @@
 
-#include "NumberGame.h"
+#include "games/NumberGame.h"
+#include <iostream>
 
 /**
  * @breif checks if the dice are within a valid range for the number of dice

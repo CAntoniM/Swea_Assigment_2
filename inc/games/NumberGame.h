@@ -1,7 +1,7 @@
 #pragma once
 
-#include <commondef.h>
-#include <UserInterface.h>
+#include <utils/commondef.h>
+#include <utils/UserInterface.h>
 
 /**
  * @breif checks if the dice are within a valid range for the number of dice

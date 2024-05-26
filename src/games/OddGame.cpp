@@ -1,5 +1,6 @@
 
-#include "OddGame.h"
+#include "games/OddGame.h"
+#include <iostream>
 
 std::string toString(Oddness val) {
     switch (val)

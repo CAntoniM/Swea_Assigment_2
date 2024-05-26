@@ -6,11 +6,7 @@
 #include <cstdint>
 #include <ctime>
 
-// Programme Headers
-#include "commondef.h"
-#include "UserInterface.h"
-#include "OddGame.h"
-#include <NumberGame.h>
+#include "Casino.h"
 
 /** Enum to represent the games that can be played */
 enum Games {
