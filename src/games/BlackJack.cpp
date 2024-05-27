@@ -112,8 +112,7 @@ std::size_t Hand::value() const {
         switch (card_rank) {
         case Ace:
             aces ++;
-            value += 11;
-            break;
+            value += 10;
         case Two:
         case Three:
         case Four:
@@ -122,7 +121,7 @@ std::size_t Hand::value() const {
         case Seven:
         case Eight:
         case Nine:
-            value += card_rank >> (RANK_OFFSET - 1);
+            value += (card_rank >> RANK_OFFSET) + 1;
             break;
         case Ten:
         case Jack:
@@ -145,13 +144,14 @@ std::size_t Hand::value() const {
 
 void Hand::draw(Deck& deck) {
     cards[size] = deck.draw();
+    size++;
     std::cout << name 
               << " Drew a "
-              << cards[size] 
+              << cards[size-1] 
               << " | Current total :"
               << value() 
               << std::endl; 
-    size++;
+
 }
 
 Card Hand::play() {
@@ -179,7 +179,7 @@ void BlackJack::play() {
     deck.shuffle();
 
     deal(player,deck);
-    deal(player,deck);
+    deal(dealer,deck);
 
     if(player.value() >= BlackJack::MAX_HAND_VAL) {
         stay(bet);
@@ -195,13 +195,13 @@ void BlackJack::play() {
                 MoveSelection::Fold << ") Fold\n\n";
             std::cout.flush();
             
-            std::string selection = prompt("Choose your move: ");
+            std::string selection = prompt("Choose your move");
 
             bool valid_guess = false;
 
             switch (atoi(selection.c_str())) {
                 case MoveSelection::Hit:
-                    hit(bet);
+                    if (hit(bet)) return ;
                     valid_guess = true;
                     break;
                 case MoveSelection::Stay:
@@ -222,12 +222,15 @@ void BlackJack::play() {
 }
 
 
-void BlackJack::hit(fint32_t bet) {
+bool BlackJack::hit(fint32_t bet) {
     player.draw(deck);
 
     if (player.value() >= MAX_HAND_VAL) {
         stay(bet);
+        return true;
     }
+
+    return false;
 }
 
 void BlackJack::stay(fint32_t bet) {
@@ -256,8 +259,8 @@ void BlackJack::stay(fint32_t bet) {
         return;
     }
 
-    uint8_t dealer_distance = MAX_HAND_VAL - dealer.value();
-    uint8_t player_distance = MAX_HAND_VAL - player.value();
+    int8_t dealer_distance = MAX_HAND_VAL - dealer.value();
+    int8_t player_distance = MAX_HAND_VAL - player.value();
 
     //Player win due to dealer being out of bounds
     if (dealer_distance < 0 && player_distance >= 0) {  
@@ -276,10 +279,10 @@ void BlackJack::stay(fint32_t bet) {
     }
 
     if (dealer_distance < player_distance) {
-        win(bet);   
+        lose(bet);
         return;
     } else {
-        lose(bet);
+        win(bet);
         return;
     }
 }

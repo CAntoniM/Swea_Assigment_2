@@ -7,12 +7,14 @@
 #include <ctime>
 
 #include "Casino.h"
+#include "games/BlackJack.h"
 
 /** Enum to represent the games that can be played */
 enum Games {
     GuessTheNumber = 1,
     GuessIsOdd = 2,
-    Exit = 3,
+    BlackJack = 3,
+    Exit = 4,
 };
 
 /**
@@ -21,10 +23,11 @@ enum Games {
  */
 inline void help() {
     
-    std::cout << "Avaliable Games: \n" <<
-                    "\t" << Games::GuessTheNumber << ") Guess the number.\n"    <<
-                    "\t" << Games::GuessIsOdd     << ") Guess Odds or evens.\n" <<
-                    "\t" << Games::Exit           << ") Exit\n\n";
+    std::cout << "Avaliable Games: \n\t" <<
+                    Games::GuessTheNumber << ") Guess the number.\n\t"    <<
+                    Games::GuessIsOdd     << ") Guess Odds or evens.\n\t" <<
+                    Games::BlackJack      << ") BlackJack\n\t" <<
+                    Games::Exit           << ") Exit\n\n";
     std::cout.flush();
 }
 
@@ -73,6 +76,11 @@ int main() {
 
             case Games::GuessIsOdd:     guess_is_odd();       break;
             case Games::GuessTheNumber: guess_the_number();   break;
+            case Games::BlackJack: {
+                struct BlackJack game;
+                game.play();
+                break;
+            } 
             case Games::Exit:           shutting_down = true; break;
             default:                    help();               break;
         }

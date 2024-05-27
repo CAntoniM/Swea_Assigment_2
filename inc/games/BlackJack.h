@@ -242,7 +242,7 @@ struct BlackJack {
      * @brief the player draws a card and then if they are over the max then we will stay
      * 
      */
-    void hit(fint32_t bet);
+    bool hit(fint32_t bet);
 
     /**
      * @brief The player will not draw anymore cards and the dealer will then 
