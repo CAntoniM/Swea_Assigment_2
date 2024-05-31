@@ -121,7 +121,7 @@ std::size_t Hand::value() const {
         case Seven:
         case Eight:
         case Nine:
-            value += (card_rank >> RANK_OFFSET) + 1;
+            value += card_rank & RANK_MASK;
             break;
         case Ten:
         case Jack:

@@ -17,7 +17,7 @@ std::string prompt( std::string msg) {
 }
 
 bool valid_bet(fint32_t bet) {
-    if (bet < 0) {
+    if (bet <= 0) {
         std::cerr << "ERROR: Please enter a balance greater than 0.\n\n";
         std::cerr.flush();
 

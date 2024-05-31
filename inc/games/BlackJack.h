@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <ostream>
 #include <string>
+#include <sys/types.h>
 
 /**
  * @brief Card Object 
@@ -24,14 +25,15 @@ typedef uint8_t Card;
  */
 enum Suite {
     Hearts = 0,
-    Diamonds = 1,
-    Clubs = 2,
-    Spades = 3,
+    Diamonds = 16,
+    Clubs = 32,
+    Spades = 48,
 };
+static const uint8_t SUITE_OFFSET=4;
 
-static const uint8_t NUMBER_OF_SUITES = Suite::Spades + 1;
+static const uint8_t NUMBER_OF_SUITES = 4;
 // Binary 11000000 to mask out the the rank from the number
-static const uint8_t SUITE_MASK = 3;
+static const uint8_t SUITE_MASK = 48;
 
 // returns the suite of a given card
 Suite suite(Card card);
@@ -47,28 +49,28 @@ inline bool operator==(const Suite& suit, const Card& card){
  * 
  */
 enum Rank {
-    Ace = 0,
-    Two = 4,
-    Three = 8,
-    Four = 12,
-    Five = 16,
-    Six = 20,
-    Seven = 24,
-    Eight = 28,
-    Nine = 32,
-    Ten = 36,
-    Jack = 40,
-    Queen = 44,
-    King = 48,
-    Joker = 52,
+    Ace = 1,
+    Two = 2,
+    Three = 3,
+    Four = 4,
+    Five = 5,
+    Six = 6,
+    Seven = 7,
+    Eight = 8,
+    Nine = 9,
+    Ten = 10,
+    Jack = 11,
+    Queen = 12,
+    King = 13,
+    Joker = 14,
 };
 
-static const uint8_t RANK_OFFSET=2;
+static const uint8_t RANK_OFFSET=0;
 // the joker is defined as the last rank and the rank starts from the 4th least 
 // significant bit and counts so this should allways calculate the number of ranks
 static const uint8_t NUMBER_OF_RANKS = (Rank::Joker >> RANK_OFFSET) + 1 ;
 // Binary 0011 1100 to mask our the 
-static const uint8_t RANK_MASK = 60;
+static const uint8_t RANK_MASK = 15;
 
 // Returns the rank of a given card
 Rank rank(Card card);
